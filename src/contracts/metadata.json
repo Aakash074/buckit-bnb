@@ -1,0 +1,362 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "string",
+						"name": "user",
+						"type": "string"
+					},
+					{
+						"indexed": true,
+						"internalType": "string",
+						"name": "nftAddress",
+						"type": "string"
+					},
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "bucketType",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "name",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "place",
+								"type": "string"
+							}
+						],
+						"indexed": false,
+						"internalType": "struct NFTBucketLinker.Bucket[]",
+						"name": "selectedBuckets",
+						"type": "tuple[]"
+					}
+				],
+				"name": "NFTLinked",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "string",
+						"name": "follower",
+						"type": "string"
+					},
+					{
+						"indexed": true,
+						"internalType": "string",
+						"name": "followee",
+						"type": "string"
+					}
+				],
+				"name": "UserFollowed",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "follower",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "followee",
+						"type": "string"
+					}
+				],
+				"name": "doesUserFollow",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "follower",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "followee",
+						"type": "string"
+					}
+				],
+				"name": "followUser",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "user",
+						"type": "string"
+					}
+				],
+				"name": "getFollowedUsers",
+				"outputs": [
+					{
+						"internalType": "string[]",
+						"name": "",
+						"type": "string[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "user",
+						"type": "string"
+					}
+				],
+				"name": "getLinkedNFTsAndBuckets",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "nftAddress",
+								"type": "string"
+							},
+							{
+								"components": [
+									{
+										"internalType": "string",
+										"name": "bucketType",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "name",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "place",
+										"type": "string"
+									}
+								],
+								"internalType": "struct NFTBucketLinker.Bucket[]",
+								"name": "selectedBuckets",
+								"type": "tuple[]"
+							}
+						],
+						"internalType": "struct NFTBucketLinker.UserNFTLink[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "user",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "nftAddress",
+						"type": "string"
+					},
+					{
+						"internalType": "string[]",
+						"name": "bucketTypes",
+						"type": "string[]"
+					},
+					{
+						"internalType": "string[]",
+						"name": "names",
+						"type": "string[]"
+					},
+					{
+						"internalType": "string[]",
+						"name": "places",
+						"type": "string[]"
+					}
+				],
+				"name": "linkNFTToBuckets",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "userFollows",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "userLinks",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "nftAddress",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"events": {
+				"NFTLinked(string,string,(string,string,string)[])": {
+					"details": "Event to track when a user links an NFT to specific buckets"
+				},
+				"UserFollowed(string,string)": {
+					"details": "Event to track when a user follows another user"
+				}
+			},
+			"kind": "dev",
+			"methods": {
+				"doesUserFollow(string,string)": {
+					"params": {
+						"followee": "The user's Hedera account ID who might be followed",
+						"follower": "The user's Hedera account ID who might be following"
+					},
+					"returns": {
+						"_0": "True if `follower` follows `followee`, false otherwise"
+					}
+				},
+				"followUser(string,string)": {
+					"params": {
+						"followee": "The user's Hedera account ID being followed or unfollowed",
+						"follower": "The user's Hedera account ID who is following or unfollowing"
+					}
+				},
+				"getFollowedUsers(string)": {
+					"params": {
+						"user": "The user's Hedera account ID"
+					},
+					"returns": {
+						"_0": "Array of user IDs that the user follows"
+					}
+				},
+				"getLinkedNFTsAndBuckets(string)": {
+					"params": {
+						"user": "The user's Hedera account ID"
+					},
+					"returns": {
+						"_0": "Array of UserNFTLink with all linked NFTs and their buckets"
+					}
+				},
+				"linkNFTToBuckets(string,string,string[],string[],string[])": {
+					"params": {
+						"bucketTypes": "Array of bucket types (e.g., \"visit\", \"activity\")",
+						"names": "Array of names corresponding to each bucket type",
+						"nftAddress": "The address or ID of the NFT",
+						"places": "Array of place names for each bucket",
+						"user": "The user's Hedera account ID"
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"doesUserFollow(string,string)": {
+					"notice": "Check if a user follows another"
+				},
+				"followUser(string,string)": {
+					"notice": "Follow or unfollow another user"
+				},
+				"getFollowedUsers(string)": {
+					"notice": "Get the list of users followed by a user"
+				},
+				"getLinkedNFTsAndBuckets(string)": {
+					"notice": "Get the linked NFTs and buckets for a user"
+				},
+				"linkNFTToBuckets(string,string,string[],string[],string[])": {
+					"notice": "Link user's account to an NFT with selected buckets"
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/Bucket.sol": "NFTBucketLinker"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/Bucket.sol": {
+			"keccak256": "0xc46d3b34c9f5dcd49f60aa6c77eb035e489b8f45e798beb62814ec50b93c56ef",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://daf134d053e41da093f2b0da4d2480f7fdab1f65ad2e57b471461b6f39ebe044",
+				"dweb:/ipfs/QmXGDrbbna5C9XeKBA2koKkZj3o23bLecN7cQWB69SNeV3"
+			]
+		}
+	},
+	"version": 1
+}
