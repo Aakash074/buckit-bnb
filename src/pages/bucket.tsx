@@ -2,7 +2,7 @@
 // import { useState, useEffect } from 'react';
 import { Client, ContractCallQuery, ContractFunctionParameters, PrivateKey, AccountId, TokenAssociateTransaction, TransferTransaction } from "@hashgraph/sdk";
 import { useEffect, useState } from "react";
-import { Interface } from "ethers"; // Direct import in v6
+// import { Interface } from "ethers"; // Direct import in v6
 import BucketAbi from "../contracts/BucketAbi.json";
 import { MagicCard } from '@/components/ui/magic-card';
 
@@ -77,15 +77,15 @@ async function getBucketList() {
           );
         const result = await query.execute(client);
         console.log(result)
-        const contractInterface = new Interface(BucketAbi);
-        const decodedResult = contractInterface.decodeFunctionResult(
-            "getLinkedNFTsAndBuckets", // Function name
-            result.bytes // Byte array result from Hedera contract call
-          );
+        // const contractInterface = new Interface(BucketAbi);
+        // const decodedResult = contractInterface.decodeFunctionResult(
+        //     "getLinkedNFTsAndBuckets", // Function name
+        //     result.bytes // Byte array result from Hedera contract call
+        //   );
 
-        const finalResult = transformToCountryGroupedArray(decodedResult);
-        console.log(finalResult) //@ts-ignore
-        setCountries(finalResult);
+        // const finalResult = transformToCountryGroupedArray(decodedResult);
+        // console.log(finalResult) //@ts-ignore
+        // setCountries(finalResult);
 
 }
 

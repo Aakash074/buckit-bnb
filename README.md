@@ -1,11 +1,6 @@
 # Buckit
 
-Fungible Token (BCK) - 0.0.5138352
-
-Topic ID - 0.0.5138179
-
-Smart Contract Id - 0.0.5138175
-
+NFT Minting Contract = "0xd8cf9a5f6cd7b518e75427b779e4cc0b5353ba47"
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

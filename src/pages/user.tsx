@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Client, ContractCallQuery, ContractExecuteTransaction, ContractFunctionParameters, PrivateKey, TopicMessageSubmitTransaction } from '@hashgraph/sdk';
 import { UserCircleIcon } from '@heroicons/react/24/solid';
-import { Interface } from 'ethers';
+// import { Interface } from 'ethers';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import BucketAbi from "../contracts/BucketAbi.json";
@@ -48,12 +48,12 @@ export const User = () => {
 
                       const result = await query.execute(client);
                       console.log(result)
-                      const contractInterface = new Interface(BucketAbi);
-                      const decodedResult = contractInterface.decodeFunctionResult(
-                          "doesUserFollow", // Function name
-                          result.bytes // Byte array result from Hedera contract call
-                        );
-                        setFollowing(decodedResult[0])
+                      // const contractInterface = new Interface(BucketAbi);
+                      // const decodedResult = contractInterface.decodeFunctionResult(
+                      //     "doesUserFollow", // Function name
+                      //     result.bytes // Byte array result from Hedera contract call
+                      //   );
+                      //   setFollowing(decodedResult[0])
                     
       }
 
@@ -75,12 +75,12 @@ export const User = () => {
 
                       const result = await query.execute(client);
                       console.log(result)
-                      const contractInterface = new Interface(BucketAbi);
-                      const decodedResult = contractInterface.decodeFunctionResult(
-                          "getFollowedUsers", // Function name
-                          result.bytes // Byte array result from Hedera contract call
-                        );
-                    console.log(decodedResult)
+                    //   const contractInterface = new Interface(BucketAbi);
+                    //   const decodedResult = contractInterface.decodeFunctionResult(
+                    //       "getFollowedUsers", // Function name
+                    //       result.bytes // Byte array result from Hedera contract call
+                    //     );
+                    // console.log(decodedResult)
       }
 
       useEffect(() => {

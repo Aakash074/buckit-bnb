@@ -3,8 +3,11 @@
 import { useEffect, useState } from 'react'; //@ts-ignore
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios from 'axios';
-import { mintNFT } from '@/lib/createNFT';
-import { Client, FileCreateTransaction, Hbar, PrivateKey } from '@hashgraph/sdk';
+// import { Client, FileCreateTransaction, Hbar, PrivateKey } from '@hashgraph/sdk';
+import { ethers } from "ethers";
+import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
+import nftMintAbi from "../contracts/nftMintAbi.json";
+
 
 //@ts-ignore
 const JWT = import.meta.env.VITE_PINATA_JWT;
@@ -13,10 +16,6 @@ const JWT = import.meta.env.VITE_PINATA_JWT;
 const PINATA_API_KEY = import.meta.env.VITE_PINATA_API_KEY;
 //@ts-ignore
 const PINATA_SECRET_KEY = import.meta.env.VITE_PINATA_SECRET_KEY;
-
-const client = Client.forTestnet(); // Use Client.forMainnet() for mainnet
-//@ts-ignore
-client.setOperator(import.meta.env.VITE_HEDERA_TESTNET_ACCOUNT_ID, PrivateKey.fromStringDer(import.meta.env.VITE_HEDERA_TESTNET_PRIVATE_KEY));
 
 
 const uploadToPinata = async (file: File) => {
@@ -39,6 +38,41 @@ const uploadToPinata = async (file: File) => {
     throw error;
   }
 };
+
+const uploadMetadataToPinata = async (ipfsHash, nftData, videoId, recipientAddress) => {
+  const metadata = {
+    name: nftData?.videoDetails?.channelTitle + " NFT",
+    description: nftData?.videoDetails?.title,
+    image: "ipfs://" + ipfsHash,
+    "properties": {
+            "creator": recipientAddress,
+            "creatorName": nftData?.videoDetails?.channelTitle,
+            "videoId": videoId,
+            "buckets": nftData?.result
+      }
+  };
+  const metadataBlob = new Blob([JSON.stringify(metadata)], { type: 'application/json' });
+    const formData = new FormData();
+          formData.append('file', metadataBlob, 'nft_metadata.json');
+  
+          const pinataOptions = JSON.stringify({
+            cidVersion: 0
+        });
+        formData.append('pinataOptions', pinataOptions);
+  
+        const response = await axios.post('https://api.pinata.cloud/pinning/pinFileToIPFS', formData, { //@ts-ignore
+          maxBodyLength: 'Infinity', // Support for large files
+          headers: {
+              'Authorization': `Bearer ${JWT}`,
+              pinata_api_key: PINATA_API_KEY,
+              pinata_secret_api_key: PINATA_SECRET_KEY
+          }
+      });
+  
+      // Get the IPFS hash from the response
+      const ipfsHashMD = response.data.IpfsHash;
+      return `ipfs://${ipfsHashMD}`
+}
 
 //@ts-ignore
 function extractYoutubeVideoId(url) {
@@ -67,7 +101,10 @@ export const Upload = () => {
       const [value, setValue] = useState("");
       const [extractedData, setExtractedData] = useState();
       const [isMobile, setIsMobile] = useState(false);
-      const [file, setFile] = useState(null);
+
+
+
+      // const [file, setFile] = useState(null);
 
       
     
@@ -77,41 +114,24 @@ export const Upload = () => {
         };
 
         //@ts-ignore
-        const handleFileChange = (event) => {
-          setFile(event.target.files[0]);
-        };
+        // const handleFileChange = (event) => {
+        //   setFile(event.target.files[0]);
+        // };
 
-        const handleFileUpload = async () => {
-          if (file) { //@ts-ignore
-            console.log("File selected:", file.name); //@ts-ignore
-            const userAccount = JSON.parse(localStorage.getItem('hederaAccountData'));
-            // Add logic to upload the file (e.g., sending it to a server)
-            const transaction = new FileCreateTransaction() //@ts-ignore
-    .addkey(userAccount?.accountId) 
-    .setContents(file);
-        
-//Change the default max transaction fee to 2 hbars
-const modifyMaxTransactionFee = transaction.setMaxTransactionFee(new Hbar(2)); 
-
-//Prepare transaction for signing, sign with the key on the file, sign with the client operator key and submit to a Hedera network
-const txId = await modifyMaxTransactionFee.build(client).sign(userAccount?.accountId).execute(client);
-
-//Request the receipt
-const receipt = await txId.getReceipt(client);
-
-//Get the file ID
-const newFileId = receipt.getFileId();
-
-console.log("The new file ID is: " + newFileId);
-          } else {
-            alert("Please select a file first!");
-          }
-        };
 
         const handleFetch = async () => {
             if(value) {
                 const videoId = extractYoutubeVideoId(value);
-                let result = await axios.get("http://localhost:3001/reels/" + videoId)
+                const response = await axios.get(`https://www.googleapis.com/youtube/v3/videos`, {
+                  params: {
+                      part: 'snippet',
+                      id: videoId,
+                      key: "AIzaSyBNx9nQY2nMg8GA9Q7K4xMcwpYQ68Gwc3A"
+                  }
+              });
+          
+              const videoDetails = response.data.items[0].snippet;
+                let result = await axios.get("http://localhost:3001/reels/ytShorts?url=" + videoId)
                 result = result.data
                 // const result = {
                 //     "result": [
@@ -439,7 +459,7 @@ console.log("The new file ID is: " + newFileId);
                 //     }
                 // } 
                 //@ts-ignore
-                setExtractedData(result);
+                setExtractedData({result, videoDetails});
         
             }
         }
@@ -451,19 +471,25 @@ console.log("The new file ID is: " + newFileId);
                 url: extractedData?.videoDetails?.thumbnails?.high?.url
             })
             console.log(response)
+            //@ts-ignore
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+            // const signer = await primaryWallet?.getSigner();
+
+            // const contractAddress = "0xfd590B760B58733488513e5E4b75130D54Cdc9f8";
+            const contractAddress = "0xd8cf9a5f6cd7b518e75427b779e4cc0b5353ba47"
+      
+            const contract = new ethers.Contract(contractAddress, nftMintAbi, signer);
+            const recipientAddress = await signer.getAddress();
             const arrayBufferData = new Uint8Array(response.data.imageBuffer.data);
             const blob = new Blob([arrayBufferData], { type: response.data.contentType });
             const file =  new File([blob], extractYoutubeVideoId(value) + '.' + response.data.contentType.slice(6), { type: response.data.contentType });
             const result = await uploadToPinata(file)
             console.log(result.IpfsHash, result, "result") //@ts-ignore
-            const userAccount = JSON.parse(localStorage.getItem('hederaAccountData'))
-            mintNFT(result?.IpfsHash, userAccount, extractedData, extractYoutubeVideoId(value))
-                .then(() => {
-                    console.log("NFT minting process completed.");
-                    setValue(""); //@ts-ignore
-                    setExtractedData();
-                }) //@ts-ignore
-                .catch(err => console.error("Error minting NFT:", err));
+            // const userAccount = JSON.parse(localStorage.getItem('hederaAccountData'))
+            const metadata = await uploadMetadataToPinata(result?.IpfsHash, extractedData, extractYoutubeVideoId(value), recipientAddress);
+            const tx = await contract.mintNFT(recipientAddress, metadata);
+            console.log(tx)
         }
 
     
@@ -482,9 +508,9 @@ console.log("The new file ID is: " + newFileId);
 
       return (
         <div className='w-full relative'>
-            <div className={`flex flex-row justify-between items-center p-2 fixed top-0 ${isMobile ? 'w-full' : 'w-[85%]'} bg-white`}>
-            <input placeholder="Enter Youtube Shorts Link" className='grow p-2' value={value} onChange={handleChange} />
-            <button onClick={handleFetch}>Fetch</button>
+            <div className={`flex flex-row justify-between items-center p-2 fixed top-0 ${isMobile ? 'w-full' : 'gap-2 w-[85%]'} bg-white`}>
+            <input placeholder="Enter Youtube Shorts Link" className='grow p-2 outline outline-1 outline-black rounded-lg' value={value} onChange={handleChange} />
+            <button className='outline outline-1 outline-black' onClick={handleFetch}>Fetch</button>
             </div>
             {extractedData && <div className='mt-20 flex flex-col justify-center items-center'> 
                 {/* @ts-ignore */}
@@ -501,7 +527,7 @@ console.log("The new file ID is: " + newFileId);
                 <button onClick={() => handleUpload()}>Upload & Mint NFT</button>
                 </div>}
                 {!extractedData && <div style={{ marginTop: "80px" }}>
-                  <div>Or</div>
+                  {/* <div>Or</div>
       <input
         type="file"
         accept="image/*"
@@ -510,9 +536,9 @@ console.log("The new file ID is: " + newFileId);
       />
       <button onClick={handleFileUpload} style={{ padding: "5px 15px" }}>
         Upload
-      </button>
+      </button> */}
       {/* @ts-ignore */}
-      {file && <p>Selected File: {file.name}</p>}
+      {/* {file && <p>Selected File: {file.name}</p>} */}
     </div>}
                 <div className='p-8' />
         </div>
