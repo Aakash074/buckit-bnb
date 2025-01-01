@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'; //@ts-ignore
 import axios from 'axios';
 // import { Client, FileCreateTransaction, Hbar, PrivateKey } from '@hashgraph/sdk';
 import { ethers } from "ethers";
-import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
+// import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import nftMintAbi from "../contracts/nftMintAbi.json";
 
 
@@ -477,7 +477,7 @@ export const Upload = () => {
             // const signer = await primaryWallet?.getSigner();
 
             // const contractAddress = "0xfd590B760B58733488513e5E4b75130D54Cdc9f8";
-            const contractAddress = "0xd8cf9a5f6cd7b518e75427b779e4cc0b5353ba47"
+            const contractAddress = "0x1645d031d37a1ef5c263d4cfa92116b0cc2f9781"
       
             const contract = new ethers.Contract(contractAddress, nftMintAbi, signer);
             const recipientAddress = await signer.getAddress();

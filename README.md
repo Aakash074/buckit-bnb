@@ -1,6 +1,6 @@
 # Buckit
 
-NFT Minting Contract = "0xd8cf9a5f6cd7b518e75427b779e4cc0b5353ba47"
+NFT Minting Contract = "0x26c9c52d5f09bfab468d68f64697966a0715b995"
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

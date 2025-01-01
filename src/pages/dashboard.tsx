@@ -12,9 +12,10 @@ const [content, setContent] = useState([]);
 
 async function fetchingNFT() {
     const result = await fetchMintedNFTs(pageToken); //@ts-ignore
+    console.log(result);
     setPageToken(result?.next) //@ts-ignore
-    if(result?.nfts?.length) { //@ts-ignore
-        setContent(prevContent => [...prevContent, ...result?.nfts]);
+    if(result?.length) { //@ts-ignore
+        setContent(prevContent => [...prevContent, ...result]);
     }
 }
 
@@ -31,9 +32,9 @@ useEffect(() => {
                 <YouTubeEmbed //@ts-ignore
                     videoId={item?.metadata?.properties?.videoId} //@ts-ignore
                     buckets={item?.metadata?.properties?.buckets}//@ts-ignore
-                    creator={item?.metadata?.properties?.creator} //@ts-ignore
+                    creator={item?.metadata?.properties?.creatorName} //@ts-ignore
                     description={item?.metadata?.description} //@ts-ignore
-                    nftAddress={item?.token_id}
+                    nftAddress={item?.tokenId}
                 />
             </div>
         })}

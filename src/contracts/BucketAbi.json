@@ -4,15 +4,52 @@
 		"inputs": [
 			{
 				"indexed": true,
-				"internalType": "string",
+				"internalType": "address",
 				"name": "user",
-				"type": "string"
+				"type": "address"
 			},
 			{
 				"indexed": true,
-				"internalType": "string",
+				"internalType": "address",
 				"name": "nftAddress",
-				"type": "string"
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "bucketIndex",
+				"type": "uint256"
+			}
+		],
+		"name": "BucketCompleted",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "nftAddress",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
 			},
 			{
 				"components": [
@@ -30,6 +67,11 @@
 						"internalType": "string",
 						"name": "place",
 						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "isCompleted",
+						"type": "bool"
 					}
 				],
 				"indexed": false,
@@ -46,58 +88,53 @@
 		"inputs": [
 			{
 				"indexed": true,
-				"internalType": "string",
+				"internalType": "address",
 				"name": "follower",
-				"type": "string"
+				"type": "address"
 			},
 			{
 				"indexed": true,
-				"internalType": "string",
+				"internalType": "address",
 				"name": "followee",
-				"type": "string"
+				"type": "address"
 			}
 		],
 		"name": "UserFollowed",
 		"type": "event"
 	},
 	{
+		"anonymous": false,
 		"inputs": [
 			{
-				"internalType": "string",
+				"indexed": true,
+				"internalType": "address",
 				"name": "follower",
-				"type": "string"
+				"type": "address"
 			},
 			{
-				"internalType": "string",
+				"indexed": true,
+				"internalType": "address",
 				"name": "followee",
-				"type": "string"
+				"type": "address"
 			}
 		],
-		"name": "doesUserFollow",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
+		"name": "UserUnfollowed",
+		"type": "event"
 	},
 	{
 		"inputs": [
 			{
-				"internalType": "string",
-				"name": "follower",
-				"type": "string"
+				"internalType": "uint256",
+				"name": "linkIndex",
+				"type": "uint256"
 			},
 			{
-				"internalType": "string",
-				"name": "followee",
-				"type": "string"
+				"internalType": "uint256",
+				"name": "bucketIndex",
+				"type": "uint256"
 			}
 		],
-		"name": "followUser",
+		"name": "completeBucket",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -105,17 +142,17 @@
 	{
 		"inputs": [
 			{
-				"internalType": "string",
+				"internalType": "address",
 				"name": "user",
-				"type": "string"
+				"type": "address"
 			}
 		],
 		"name": "getFollowedUsers",
 		"outputs": [
 			{
-				"internalType": "string[]",
+				"internalType": "address[]",
 				"name": "",
-				"type": "string[]"
+				"type": "address[]"
 			}
 		],
 		"stateMutability": "view",
@@ -124,19 +161,24 @@
 	{
 		"inputs": [
 			{
-				"internalType": "string",
+				"internalType": "address",
 				"name": "user",
-				"type": "string"
+				"type": "address"
 			}
 		],
-		"name": "getLinkedNFTsAndBuckets",
+		"name": "getUserBucketList",
 		"outputs": [
 			{
 				"components": [
 					{
-						"internalType": "string",
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
 						"name": "nftAddress",
-						"type": "string"
+						"type": "address"
 					},
 					{
 						"components": [
@@ -154,11 +196,21 @@
 								"internalType": "string",
 								"name": "place",
 								"type": "string"
+							},
+							{
+								"internalType": "bool",
+								"name": "isCompleted",
+								"type": "bool"
 							}
 						],
 						"internalType": "struct NFTBucketLinker.Bucket[]",
 						"name": "selectedBuckets",
 						"type": "tuple[]"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
 					}
 				],
 				"internalType": "struct NFTBucketLinker.UserNFTLink[]",
@@ -172,14 +224,62 @@
 	{
 		"inputs": [
 			{
-				"internalType": "string",
-				"name": "user",
-				"type": "string"
+				"internalType": "address",
+				"name": "follower",
+				"type": "address"
 			},
 			{
-				"internalType": "string",
+				"internalType": "address",
+				"name": "followee",
+				"type": "address"
+			}
+		],
+		"name": "isFollowing",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "isTokenLinked",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
 				"name": "nftAddress",
-				"type": "string"
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
 			},
 			{
 				"internalType": "string[]",
@@ -205,9 +305,22 @@
 	{
 		"inputs": [
 			{
-				"internalType": "string",
+				"internalType": "address",
+				"name": "followee",
+				"type": "address"
+			}
+		],
+		"name": "toggleFollow",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
 				"name": "",
-				"type": "string"
+				"type": "address"
 			},
 			{
 				"internalType": "uint256",
@@ -218,9 +331,9 @@
 		"name": "userFollows",
 		"outputs": [
 			{
-				"internalType": "string",
+				"internalType": "address",
 				"name": "",
-				"type": "string"
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -229,9 +342,9 @@
 	{
 		"inputs": [
 			{
-				"internalType": "string",
+				"internalType": "address",
 				"name": "",
-				"type": "string"
+				"type": "address"
 			},
 			{
 				"internalType": "uint256",
@@ -242,9 +355,19 @@
 		"name": "userLinks",
 		"outputs": [
 			{
-				"internalType": "string",
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
 				"name": "nftAddress",
-				"type": "string"
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",

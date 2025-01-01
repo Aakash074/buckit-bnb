@@ -15,7 +15,7 @@ export const TabBar = () => {
         <div onClick={() => navigate("/dashboard")}><HomeIcon className="size-6 text-blue-500" /></div>
         <div onClick={() => navigate("/bucket")}><QueueListIcon className="size-6 text-blue-500" /></div>
         <div onClick={() => navigate("/upload")}><PlusCircleIcon className="size-8 text-blue-500" /></div>
-        <div onClick={() => navigate("/alerts")}><BellAlertIcon className="size-6 text-blue-500" /></div>
+        {/* <div onClick={() => navigate("/alerts")}><BellAlertIcon className="size-6 text-blue-500" /></div> */}
         <div onClick={() => setShowDynamicUserProfile(!showDynamicUserProfile)}><UserIcon className="size-6 text-blue-500" /></div>
     </div>
   );

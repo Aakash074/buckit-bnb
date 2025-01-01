@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffect, useRef, useState } from 'react';
-import { Client, ContractExecuteTransaction, ContractFunctionParameters, PrivateKey, TopicMessageSubmitTransaction } from "@hashgraph/sdk";
 import { UserCircleIcon } from '@heroicons/react/24/solid';
 import { useNavigate } from 'react-router-dom';
+import { ethers } from "ethers";
+// import nftMintAbi from "../contracts/bucketAbi.json";
+import bucketAbi from "../contracts/bucketAbi.json";
 
 
-const contractId = "0.0.5138175"
-const topicId = "0.0.5138179"
 //@ts-ignore
 const YouTubeEmbed = ({ videoId, buckets, nftAddress, creator, description }) => {
   const [isMobile, setIsMobile] = useState(false);
@@ -35,9 +35,6 @@ const YouTubeEmbed = ({ videoId, buckets, nftAddress, creator, description }) =>
 
   async function addToBucketList() {
     console.log(nftAddress, typeof nftAddress);
-    const client = Client.forTestnet(); //@ts-ignore
-    const userAccount = JSON.parse(localStorage.getItem('hederaAccountData'));
-    client.setOperator(userAccount?.accountId, PrivateKey.fromStringDer(userAccount?.accountPvtKey));
 
     const bucketDetails = {
       bucketTypes: [],
@@ -59,37 +56,29 @@ const YouTubeEmbed = ({ videoId, buckets, nftAddress, creator, description }) =>
       // }
   });
 
-    const params = new ContractFunctionParameters()
-                    .addString(userAccount?.accountId.toString())               // Hedera account ID as string
-                    .addString(nftAddress.toString())         // NFT address or identifier
-                    .addStringArray(bucketDetails?.bucketTypes) // Array of bucket types
-                    .addStringArray(bucketDetails?.names)       // Array of names
-                    .addStringArray(bucketDetails?.places);     // Array of places
-      
-    console.log(params)
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  // const contractAddress = "0xfd590B760B58733488513e5E4b75130D54Cdc9f8";
+  const contractAddressNFTMint = "0x1645d031d37a1ef5c263d4cfa92116b0cc2f9781"
 
-    const transaction = new ContractExecuteTransaction()
-        .setContractId(contractId)
-        .setGas(1_000_000) // Set gas limit appropriately
-        .setFunction(
-          "linkNFTToBuckets",
-          params
-        ); // Use addString instead of addUint256
+  const contractAddress = "0x0b72a91021a83f591bb9da8530cfb3e6799149d3"
 
-    console.log(transaction)
+  const contract = new ethers.Contract(contractAddress, bucketAbi, signer);
 
-    const txResponse = await transaction.execute(client);
-    const receipt = await txResponse.getReceipt(client);
-    console.log(`Transaction status: ${receipt.status}`);
-    const sendResponse = await new TopicMessageSubmitTransaction({
-      topicId: topicId,
-      message: `${nftAddress} is added to bucketlist`,
-    }).execute(client);
-    const getReceipt = await sendResponse.getReceipt(client);
+  // const userAddress = await signer.getAddress();
 
-    // Get the status of the transaction
-    const transactionStatus = getReceipt.status
-    console.log("The message transaction status " + transactionStatus.toString())
+  const tx = await contract.linkNFTToBuckets(
+    contractAddressNFTMint,
+    nftAddress,
+    bucketDetails?.bucketTypes,
+    bucketDetails?.names,
+    bucketDetails?.places
+  );
+
+    await tx.wait();
+
+
+
 }
 
   // Handle select all

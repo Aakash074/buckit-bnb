@@ -3,89 +3,117 @@
 import { Client, ContractCallQuery, ContractFunctionParameters, PrivateKey, AccountId, TokenAssociateTransaction, TransferTransaction } from "@hashgraph/sdk";
 import { useEffect, useState } from "react";
 // import { Interface } from "ethers"; // Direct import in v6
-import BucketAbi from "../contracts/BucketAbi.json";
+import bucketAbi from "../contracts/bucketAbi.json";
 import { MagicCard } from '@/components/ui/magic-card';
+import { ethers } from "ethers";
+
 
 // const parseUint256 = (value) => {
 //   return toBigInt(value);
 // };
 
-const tokenId = "0.0.5138352" 
-
-const contractId = "0.0.5138175"
 //@ts-ignore
 // const userAccount = JSON.parse(localStorage.getItem('hederaAccountData'));
 // Initialize Hedera client
-const client = Client.forTestnet(); // Use Client.forMainnet() for mainnet
 //@ts-ignore
-client.setOperator(import.meta.env.VITE_HEDERA_TESTNET_ACCOUNT_ID, PrivateKey.fromStringDer(import.meta.env.VITE_HEDERA_TESTNET_PRIVATE_KEY));
-//@ts-ignore
-function transformToCountryGroupedArray(data) {
+function transformToCountryGroupedArray(nftLinks) {
     const countryMap = {};
-
-    // Loop over each NFT entry
-    //@ts-ignore
-    data.forEach(nftArray => { //@ts-ignore
-        nftArray.forEach(([nftId, locations]) => {
-            // Loop over each location for the current NFT ID
-            //@ts-ignore
-            locations.forEach(([type, name, address]) => {
-                // Get the last part of the address as the country name
-                const country = address.split(", ").pop();
-//@ts-ignore
-                // Initialize the country array if it doesn't exist in the map
-                if (!countryMap[country]) {//@ts-ignore
-                    countryMap[country] = [];
-                }
-//@ts-ignore
-                // Add the location to the country's array
-                countryMap[country].push({
-                    type,
-                    name,
-                    nftId,
-                    address
-                });
-            });
+  
+    // Loop through each NFT link
+    nftLinks.forEach((nftLink) => {
+      const tokenId = nftLink.tokenId.toString();
+  
+      // Process each bucket in the NFT link
+      nftLink.selectedBuckets.forEach((bucket) => {
+        // Extract country from the place field (assuming last part is country)
+        const addressParts = bucket.place.split(", ");
+        const country = addressParts[addressParts.length - 1];
+  
+        // Initialize country array if it doesn't exist
+        if (!countryMap[country]) {
+          countryMap[country] = [];
+        }
+  
+        // Add location info to the country's array
+        countryMap[country].push({
+          nftId: tokenId,
+          type: bucket.bucketType,
+          name: bucket.name,
+          address: bucket.place,
+          isCompleted: bucket.isCompleted
         });
+      });
     });
-
-    // Convert the countryMap to an array format
-    const countryArray = Object.keys(countryMap).map(country => ({
-        country, //@ts-ignore
-        locations: countryMap[country]
+  
+    // Convert map to array format
+    return Object.entries(countryMap).map(([country, locations]) => ({
+      country,
+      locations: locations.sort((a, b) => a.name.localeCompare(b.name))
     }));
+  }
+// function transformToCountryGroupedArray(data) {
+//     const countryMap = {};
 
-    return countryArray;
-}
+//     // Loop over each NFT entry
+//     //@ts-ignore
+//     data.forEach(nftArray => { //@ts-ignore
+//         nftArray.forEach(([nftId, locations]) => {
+//             // Loop over each location for the current NFT ID
+//             //@ts-ignore
+//             locations.forEach(([type, name, address]) => {
+//                 // Get the last part of the address as the country name
+//                 const country = address.split(", ").pop();
+// //@ts-ignore
+//                 // Initialize the country array if it doesn't exist in the map
+//                 if (!countryMap[country]) {//@ts-ignore
+//                     countryMap[country] = [];
+//                 }
+// //@ts-ignore
+//                 // Add the location to the country's array
+//                 countryMap[country].push({
+//                     type,
+//                     name,
+//                     nftId,
+//                     address
+//                 });
+//             });
+//         });
+//     });
+
+//     // Convert the countryMap to an array format
+//     const countryArray = Object.keys(countryMap).map(country => ({
+//         country, //@ts-ignore
+//         locations: countryMap[country]
+//     }));
+
+//     return countryArray;
+// }
 
 //@ts-ignore
 export const Bucket = () => {
   const [countries, setCountries] = useState([]);
-const client = Client.forTestnet(); //@ts-ignore
-const userAccount = JSON.parse(localStorage.getItem('hederaAccountData'));
-async function getBucketList() {
-    const accountId = AccountId.fromString(userAccount.accountId);
-    client.setOperator(userAccount?.accountId, PrivateKey.fromStringDer(userAccount?.accountPvtKey));
-    const params = new ContractFunctionParameters().addString(accountId?.toString())
 
-    const query = new ContractCallQuery()
-        .setContractId(contractId)
-        .setGas(400000) 
-        .setFunction(
-            "getLinkedNFTsAndBuckets",
-            params
-          );
-        const result = await query.execute(client);
-        console.log(result)
+async function getBucketList() {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+
+    const contractAddress = "0x0b72a91021a83f591bb9da8530cfb3e6799149d3"
+
+    const userAddress = await signer.getAddress();
+
+  const contract = new ethers.Contract(contractAddress, bucketAbi, signer);
+
+  const bucketListData = await contract.getUserBucketList(userAddress);
+        console.log(bucketListData)
         // const contractInterface = new Interface(BucketAbi);
         // const decodedResult = contractInterface.decodeFunctionResult(
         //     "getLinkedNFTsAndBuckets", // Function name
         //     result.bytes // Byte array result from Hedera contract call
         //   );
 
-        // const finalResult = transformToCountryGroupedArray(decodedResult);
-        // console.log(finalResult) //@ts-ignore
-        // setCountries(finalResult);
+        const finalResult = transformToCountryGroupedArray(bucketListData);
+        console.log(finalResult) //@ts-ignore
+        setCountries(finalResult);
 
 }
 
