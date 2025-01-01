@@ -8,7 +8,6 @@ import { useParams } from 'react-router-dom';
 //@ts-ignore
 export const User = () => {
     const [isMobile, setIsMobile] = useState(false);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [following, setFollowing] = useState(false)
     const { user } = useParams();
     console.log(isMobile)
@@ -41,6 +40,7 @@ export const User = () => {
       },[])
 
       async function addRemoveFollower() {
+        setFollowing(false)
       
         //@ts-ignore
     }
