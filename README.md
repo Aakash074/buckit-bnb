@@ -6,6 +6,13 @@ Bucketlist Contract = "0x5b506b9595cf06cea8bb8f2ad71ace221441576c"
 
 Bucket Token Address = "0x31a09d5ef78e84c9f2317703856d92c5ef04420a"
 
+Sample travel related YT shorts to check
+
+1. https://youtube.com/shorts/gJDswNO1vPU
+2. https://youtube.com/shorts/IbyXZcfwHY4
+3. https://youtube.com/shorts/2Aw9WIa07HY
+4. https://youtube.com/shorts/3l8YE-NUwTI
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
