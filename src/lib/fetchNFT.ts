@@ -5,7 +5,6 @@ import { ethers } from "ethers";
 import nftMintAbi from "../contracts/nftMintAbi.json";
 
 //@ts-ignore
-const decodeBase64 = (data) => Buffer.from(data, 'base64').toString('utf8');
 
 //@ts-ignore
 const fetchNFTMetadataFromIPFS = async (ipfsHash) => {
@@ -20,27 +19,27 @@ const fetchNFTMetadataFromIPFS = async (ipfsHash) => {
     }
   };
 //@ts-ignore
-export const fetchMintedNFTs = async (pageToken) => {
+export const fetchMintedNFTs = async () => {
     // console.log(pageToken, "fetchNFT")
     //@ts-ignore
 
 
 
-    try {
+    try { //@ts-ignore
       const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             // const contractAddress = "0xfd590B760B58733488513e5E4b75130D54Cdc9f8";
-            const contractAddress = "0x1645d031d37a1ef5c263d4cfa92116b0cc2f9781"
+            const contractAddress = "0x71d75177f0e105ddcf8628f352981d8e50a0136a"
       
             const contract = new ethers.Contract(contractAddress, nftMintAbi, signer);
-      const [tokenIds, owners, metadataURIs] = await contract.allMintedTokens();
+      const [tokenIds, owners, metadataURIs] = await contract.allMintedTokens(); //@ts-ignore
       const tokenData = tokenIds.map((id, index) => ({
         tokenId: id.toString(),
         owner: owners[index],
         metadataURI: metadataURIs[index],
       }));
         // console.log(tokenData)
-        const MetaDataNFTs = await Promise.all(
+        const MetaDataNFTs = await Promise.all( //@ts-ignore
           tokenData.map(async (token) => {
             // Fetch metadata from IPFS
             const metadata = await fetchNFTMetadataFromIPFS(token.metadataURI);

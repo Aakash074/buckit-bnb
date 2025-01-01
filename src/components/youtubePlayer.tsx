@@ -56,12 +56,13 @@ const YouTubeEmbed = ({ videoId, buckets, nftAddress, creator, description }) =>
       // }
   });
 
+  //@ts-ignore
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   // const contractAddress = "0xfd590B760B58733488513e5E4b75130D54Cdc9f8";
-  const contractAddressNFTMint = "0x1645d031d37a1ef5c263d4cfa92116b0cc2f9781"
+  const contractAddressNFTMint = "0x71d75177f0e105ddcf8628f352981d8e50a0136a"
 
-  const contractAddress = "0x0b72a91021a83f591bb9da8530cfb3e6799149d3"
+  const contractAddress = "0x5b506b9595cf06cea8bb8f2ad71ace221441576c"
 
   const contract = new ethers.Contract(contractAddress, bucketAbi, signer);
 

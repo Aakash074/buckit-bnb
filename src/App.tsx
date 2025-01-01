@@ -2,7 +2,7 @@
 import './App.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import DashboardLayout from "./components/DashboardLayout";
-import { Home, Dashboard, Bucket, Upload, User, Alerts } from "./pages";
+import { Home, Dashboard, Bucket, Upload, User } from "./pages";
 
 const router = createBrowserRouter([
   {
@@ -20,10 +20,6 @@ const router = createBrowserRouter([
   {
     path: '/upload',
     element: <DashboardLayout><Upload /></DashboardLayout>,
-  },
-  {
-    path: '/alerts',
-    element: <DashboardLayout><Alerts /></DashboardLayout>,
   },
   {
     path: '/:user',

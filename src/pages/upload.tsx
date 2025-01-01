@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'; //@ts-ignore
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios from 'axios';
-// import { Client, FileCreateTransaction, Hbar, PrivateKey } from '@hashgraph/sdk';
 import { ethers } from "ethers";
 // import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import nftMintAbi from "../contracts/nftMintAbi.json";
@@ -39,6 +38,7 @@ const uploadToPinata = async (file: File) => {
   }
 };
 
+//@ts-ignore
 const uploadMetadataToPinata = async (ipfsHash, nftData, videoId, recipientAddress) => {
   const metadata = {
     name: nftData?.videoDetails?.channelTitle + " NFT",
@@ -131,7 +131,7 @@ export const Upload = () => {
               });
           
               const videoDetails = response.data.items[0].snippet;
-                let result = await axios.get("http://localhost:3001/reels/ytShorts?url=" + videoId)
+                let result = await axios.get("https://api.clonemytrips.com/reels/ytShorts?url=" + videoId)
                 result = result.data
                 // const result = {
                 //     "result": [
@@ -467,7 +467,7 @@ export const Upload = () => {
         const handleUpload = async () => {
             // const response = await axios.post(extractedData?.videoDetails?.thumbnails?.high?.url, { responseType: 'arraybuffer' });
             // const imageBuffer = Buffer.from(response.data, 'binary');
-            const response = await axios.post('http://localhost:3001/proxy', { //@ts-ignore
+            const response = await axios.post('https://api.clonemytrips.com/proxy', { //@ts-ignore
                 url: extractedData?.videoDetails?.thumbnails?.high?.url
             })
             console.log(response)
@@ -477,7 +477,7 @@ export const Upload = () => {
             // const signer = await primaryWallet?.getSigner();
 
             // const contractAddress = "0xfd590B760B58733488513e5E4b75130D54Cdc9f8";
-            const contractAddress = "0x1645d031d37a1ef5c263d4cfa92116b0cc2f9781"
+            const contractAddress = "0x71d75177f0e105ddcf8628f352981d8e50a0136a"
       
             const contract = new ethers.Contract(contractAddress, nftMintAbi, signer);
             const recipientAddress = await signer.getAddress();
@@ -486,7 +486,6 @@ export const Upload = () => {
             const file =  new File([blob], extractYoutubeVideoId(value) + '.' + response.data.contentType.slice(6), { type: response.data.contentType });
             const result = await uploadToPinata(file)
             console.log(result.IpfsHash, result, "result") //@ts-ignore
-            // const userAccount = JSON.parse(localStorage.getItem('hederaAccountData'))
             const metadata = await uploadMetadataToPinata(result?.IpfsHash, extractedData, extractYoutubeVideoId(value), recipientAddress);
             const tx = await contract.mintNFT(recipientAddress, metadata);
             console.log(tx)

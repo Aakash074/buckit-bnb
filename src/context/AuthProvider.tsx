@@ -23,24 +23,6 @@ const AuthProvider = ({children}) => {
         rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'], // BSC Testnet RPC
         vanityName: 'BNB Smart Chain Testnet',
     }
-    //     {
-    //         blockExplorerUrls: ['https://hashscan.io/#/testnet'],
-    //         chainId: 296,
-    //         chainName: 'Hedera Testnet',
-    //         iconUrls: [
-    //             'https://avatars.githubusercontent.com/u/31002956?s=200&v=4'  // HBAR icon
-    //         ],
-    //         name: 'Hedera',
-    //         nativeCurrency: {
-    //             decimals: 8,
-    //             name: 'HBAR',
-    //             symbol: 'HBAR',
-    //             iconUrl: 'https://avatars.githubusercontent.com/u/31002956?s=200&v=4',
-    //         },
-    //         networkId: 296,
-    //         rpcUrls: ['https://testnet.hashio.io/api'],
-    //         vanityName: 'Hedera Testnet',
-    //     }
     ]
   return (<DynamicContextProvider
     settings={{

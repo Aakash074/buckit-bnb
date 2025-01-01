@@ -2,7 +2,7 @@
 // import { useState, useEffect } from 'react';
 import { useDynamicContext } from '@dynamic-labs/sdk-react-core'
 import { useNavigate } from 'react-router-dom';
-import { BellAlertIcon, HomeIcon, PlusCircleIcon, QueueListIcon, UserIcon } from '@heroicons/react/24/solid';
+import { HomeIcon, PlusCircleIcon, QueueListIcon, UserIcon } from '@heroicons/react/24/solid';
 
 //@ts-ignore
 export const TabBar = () => {

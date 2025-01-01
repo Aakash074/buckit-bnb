@@ -3274,6 +3274,8 @@ contract UserMintableNFT is ERC721URIStorage, Ownable {
     // Constructor with initial owner parameter
     constructor(address initialOwner) ERC721("UserMintableNFT", "UMNFT") Ownable(initialOwner) {}
 
+    mapping(uint256 => address) private _allTokenOwners;
+
     function mintNFT(address recipient, string memory tokenURI)
         public
         returns (uint256)
@@ -3282,6 +3284,8 @@ contract UserMintableNFT is ERC721URIStorage, Ownable {
         uint256 newItemId = _tokenIds;
         _mint(recipient, newItemId);
         _setTokenURI(newItemId, tokenURI);
+
+        _allTokenOwners[newItemId] = recipient; // Track owner
         return newItemId;
     }
 
@@ -3299,4 +3303,20 @@ contract UserMintableNFT is ERC721URIStorage, Ownable {
 
         return tokens;
     }
+
+    function allMintedTokens() external view returns (uint256[] memory, address[] memory, string[] memory) {
+    uint256[] memory tokenIds = new uint256[](_tokenIds);
+    address[] memory owners = new address[](_tokenIds);
+    string[] memory metadataURIs = new string[](_tokenIds);
+
+    for (uint256 i = 1; i <= _tokenIds; i++) {
+        tokenIds[i - 1] = i;
+        owners[i - 1] = _allTokenOwners[i];
+        metadataURIs[i - 1] = tokenURI(i); // Fetch the metadata URI
+    }
+
+    return (tokenIds, owners, metadataURIs);
+}
+
+
 }

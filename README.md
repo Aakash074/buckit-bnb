@@ -1,6 +1,10 @@
 # Buckit
 
-NFT Minting Contract = "0x26c9c52d5f09bfab468d68f64697966a0715b995"
+NFT Minting Contract = "0x71d75177f0e105ddcf8628f352981d8e50a0136a"
+
+Bucketlist Contract = "0x5b506b9595cf06cea8bb8f2ad71ace221441576c"
+
+Bucket Token Address = "0x31a09d5ef78e84c9f2317703856d92c5ef04420a"
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

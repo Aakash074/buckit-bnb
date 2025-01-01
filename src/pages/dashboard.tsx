@@ -7,13 +7,13 @@ import YouTubeEmbed from "../components/youtubePlayer";
 //@ts-ignore
 export const Dashboard = () => {
 //   const [showProfile, setShowProfile] = useState(false);
-const [pageToken, setPageToken] = useState("")
+// const [pageToken, setPageToken] = useState("")
 const [content, setContent] = useState([]);
 
 async function fetchingNFT() {
-    const result = await fetchMintedNFTs(pageToken); //@ts-ignore
-    console.log(result);
-    setPageToken(result?.next) //@ts-ignore
+    const result = await fetchMintedNFTs(); //@ts-ignore
+    console.log(result); //@ts-ignore
+    // setPageToken(result?.next) //@ts-ignore
     if(result?.length) { //@ts-ignore
         setContent(prevContent => [...prevContent, ...result]);
     }

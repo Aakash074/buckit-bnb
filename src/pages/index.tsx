@@ -4,4 +4,3 @@ export * from './dashboard';
 export * from './bucket';
 export * from './upload';
 export * from './user';
-export * from './alerts';

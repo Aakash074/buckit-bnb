@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // import { useState, useEffect } from 'react';
-import { Client, ContractCallQuery, ContractFunctionParameters, PrivateKey, AccountId, TokenAssociateTransaction, TransferTransaction } from "@hashgraph/sdk";
 import { useEffect, useState } from "react";
 // import { Interface } from "ethers"; // Direct import in v6
 import bucketAbi from "../contracts/bucketAbi.json";
@@ -13,28 +12,29 @@ import { ethers } from "ethers";
 // };
 
 //@ts-ignore
-// const userAccount = JSON.parse(localStorage.getItem('hederaAccountData'));
-// Initialize Hedera client
-//@ts-ignore
 function transformToCountryGroupedArray(nftLinks) {
     const countryMap = {};
   
     // Loop through each NFT link
+    //@ts-ignore
     nftLinks.forEach((nftLink) => {
       const tokenId = nftLink.tokenId.toString();
   
       // Process each bucket in the NFT link
+      //@ts-ignore
       nftLink.selectedBuckets.forEach((bucket) => {
         // Extract country from the place field (assuming last part is country)
         const addressParts = bucket.place.split(", ");
         const country = addressParts[addressParts.length - 1];
   
         // Initialize country array if it doesn't exist
-        if (!countryMap[country]) {
+        //@ts-ignore
+        if (!countryMap[country]) { //@ts-ignore
           countryMap[country] = [];
         }
   
         // Add location info to the country's array
+        //@ts-ignore
         countryMap[country].push({
           nftId: tokenId,
           type: bucket.bucketType,
@@ -47,7 +47,7 @@ function transformToCountryGroupedArray(nftLinks) {
   
     // Convert map to array format
     return Object.entries(countryMap).map(([country, locations]) => ({
-      country,
+      country, //@ts-ignore
       locations: locations.sort((a, b) => a.name.localeCompare(b.name))
     }));
   }
@@ -93,11 +93,11 @@ function transformToCountryGroupedArray(nftLinks) {
 export const Bucket = () => {
   const [countries, setCountries] = useState([]);
 
-async function getBucketList() {
+async function getBucketList() { //@ts-ignore
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
 
-    const contractAddress = "0x0b72a91021a83f591bb9da8530cfb3e6799149d3"
+    const contractAddress = "0x5b506b9595cf06cea8bb8f2ad71ace221441576c"
 
     const userAddress = await signer.getAddress();
 
@@ -105,11 +105,7 @@ async function getBucketList() {
 
   const bucketListData = await contract.getUserBucketList(userAddress);
         console.log(bucketListData)
-        // const contractInterface = new Interface(BucketAbi);
-        // const decodedResult = contractInterface.decodeFunctionResult(
-        //     "getLinkedNFTsAndBuckets", // Function name
-        //     result.bytes // Byte array result from Hedera contract call
-        //   );
+
 
         const finalResult = transformToCountryGroupedArray(bucketListData);
         console.log(finalResult) //@ts-ignore
@@ -123,39 +119,7 @@ useEffect(() => {
 
 const handleClick = async () => { //@ts-ignore
     const amount = parseInt(Math.random()*1000);
-    const client = Client.forTestnet(); // Use Client.forMainnet() for mainnet
-//@ts-ignore
-client.setOperator(import.meta.env.VITE_HEDERA_TESTNET_ACCOUNT_ID, PrivateKey.fromStringDer(import.meta.env.VITE_HEDERA_TESTNET_PRIVATE_KEY));
-
-    const associateAliceTx = await new TokenAssociateTransaction()
-	.setAccountId(userAccount?.accountId)
-	.setTokenIds([tokenId])
-	.freezeWith(client)
-	.sign(PrivateKey.fromStringDer(userAccount?.accountPvtKey));
-
-//SUBMIT THE TRANSACTION
-const associateAliceTxSubmit = await associateAliceTx.execute(client);
-
-//GET THE RECEIPT OF THE TRANSACTION
-const associateAliceRx = await associateAliceTxSubmit.getReceipt(client);
-
-//LOG THE TRANSACTION STATUS
-console.log(`- Token association with Alice's account: ${associateAliceRx.status} \n`);
-
-const tokenTransferTx = await new TransferTransaction() //@ts-ignore
-	.addTokenTransfer(tokenId, import.meta.env.VITE_HEDERA_TESTNET_ACCOUNT_ID, -parseInt(amount / 2)) //@ts-ignore
-	.addTokenTransfer(tokenId, userAccount?.accountId, parseInt(amount / 2))
-	.freezeWith(client)
-	.sign(PrivateKey.fromStringDer(import.meta.env.VITE_HEDERA_TESTNET_PRIVATE_KEY));
-
-//SUBMIT THE TRANSACTION
-const tokenTransferSubmit = await tokenTransferTx.execute(client);
-
-//GET THE RECEIPT OF THE TRANSACTION
-const tokenTransferRx = await tokenTransferSubmit.getReceipt(client);
-
-//LOG THE TRANSACTION STATUS
-console.log(`\n- Stablecoin transfer from Treasury to Alice: ${tokenTransferRx.status} \n`);
+    console.log("Tx done with amount ", amount);
 
 }
 

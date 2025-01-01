@@ -16,7 +16,7 @@ export const Home = () => {
     if (user) {
         navigate("/dashboard")
     } else {
-        localStorage.removeItem('hederaAccountData');
+        navigate("/")
     }
   }, [user])
 
