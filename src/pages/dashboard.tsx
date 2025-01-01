@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useState, useEffect } from 'react';
 import { fetchMintedNFTs } from "@/lib/fetchNFT";
-import YouTubeEmbed from "../components/youtubePlayer";
+import YouTubeEmbed from "@/components/youtubePlayer";
 
 //@ts-ignore
 export const Dashboard = () => {

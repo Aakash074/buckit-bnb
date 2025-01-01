@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useDynamicContext, DynamicWidget } from '@dynamic-labs/sdk-react-core'
 import { useNavigate } from 'react-router-dom';
-import { TabBar, SideBar } from '../components';
+import { TabBar, SideBar } from '@/components';
 
 //@ts-ignore
 

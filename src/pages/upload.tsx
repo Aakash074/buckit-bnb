@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'; //@ts-ignore
 import axios from 'axios';
 import { ethers } from "ethers";
 // import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
-import nftMintAbi from "../contracts/nftMintAbi.json";
+import nftMintAbi from "@/contracts/nftMintAbi.json";
 
 
 //@ts-ignore

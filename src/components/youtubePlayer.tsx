@@ -5,7 +5,7 @@ import { UserCircleIcon } from '@heroicons/react/24/solid';
 import { useNavigate } from 'react-router-dom';
 import { ethers } from "ethers";
 // import nftMintAbi from "../contracts/bucketAbi.json";
-import bucketAbi from "../contracts/bucketAbi.json";
+import bucketAbi from "@/contracts/bucketAbi.json";
 
 
 //@ts-ignore

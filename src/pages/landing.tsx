@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useDynamicContext, DynamicWidget } from '@dynamic-labs/sdk-react-core'
 import { useNavigate } from 'react-router-dom';
-import BuckLogo from '../assets/buckit.jpg'
+import BuckLogo from '@/assets/buckit.jpg'
 import RetroGrid from '@/components/ui/retro-grid';
 import ShimmerButton from '@/components/ui/shimmer-button';
 

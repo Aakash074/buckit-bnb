@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 import { ethers } from "ethers";
-import nftMintAbi from "../contracts/nftMintAbi.json";
+import nftMintAbi from "@/contracts/nftMintAbi.json";
 
 //@ts-ignore
 

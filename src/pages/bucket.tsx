@@ -2,7 +2,7 @@
 // import { useState, useEffect } from 'react';
 import { useEffect, useState } from "react";
 // import { Interface } from "ethers"; // Direct import in v6
-import bucketAbi from "../contracts/bucketAbi.json";
+import bucketAbi from "@/contracts/bucketAbi.json";
 import { MagicCard } from '@/components/ui/magic-card';
 import { ethers } from "ethers";
 
