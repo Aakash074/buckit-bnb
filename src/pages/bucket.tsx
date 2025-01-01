@@ -119,6 +119,7 @@ useEffect(() => {
 
 const handleClick = async () => { //@ts-ignore
     const amount = parseInt(Math.random()*1000);
+    //later transactions will happen here to transfer tokens to travel agencies accounts
     console.log("Tx done with amount ", amount);
 
 }
